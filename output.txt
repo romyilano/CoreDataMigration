@@ -1,0 +1,12 @@
+Binary data
+2014-07-31 09:47:38.417 CoreDataMigration[3022:925001] Migration required
+...
+2014-07-31 09:48:15.935 CoreDataMigration[3022:925085] Migration took 37476904704 ns (37.5 sec)
+2014-07-31 09:48:15.936 CoreDataMigration[3022:925001] Initialising MOC
+
+
+No binary data
+2014-07-31 09:48:44.990 CoreDataMigration[3044:925766] Migration required
+...
+2014-07-31 09:48:45.625 CoreDataMigration[3044:925847] Migration took 599993330 ns (0.6 sec)
+2014-07-31 09:48:45.626 CoreDataMigration[3044:925766] Initialising MOC
