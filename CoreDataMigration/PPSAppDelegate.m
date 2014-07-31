@@ -14,8 +14,74 @@
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
+extern uint64_t dispatch_benchmark(size_t count, void (^block)(void));
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    NSLog(@"Documents directory: %@",[self applicationDocumentsDirectory]);
+    
+    
+    // first, check if migration is required
+    
+    NSDictionary *sourceMetadata = [NSPersistentStoreCoordinator metadataForPersistentStoreOfType:NSSQLiteStoreType
+                                                                                              URL:[self storeURL]
+                                                                                            error:nil];
+    if (sourceMetadata) {
+        if (![[self managedObjectModel] isConfiguration:nil compatibleWithStoreMetadata:sourceMetadata]) {
+            NSLog(@"Migration required");
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                uint64_t t = dispatch_benchmark(1, ^{
+                   [self persistentStoreCoordinator];
+                });
+                NSLog(@"Migration took %lluns", t);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSLog(@"Initialising MOC");
+                    [self managedObjectContext];
+                });
+            });
+        } else {
+            NSLog(@"Migration not required");
+        }
+    } else {
+        NSManagedObjectContext *ctx = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+        ctx.parentContext = self.managedObjectContext;
+        [ctx performBlock:^{
+            
+            NSFetchRequest *fr = [NSFetchRequest fetchRequestWithEntityName:@"VideoMessage"];
+            NSError *error = nil;
+            NSUInteger messageCount = 1000;
+            
+            if ([ctx countForFetchRequest:fr error:&error] != messageCount) {
+                if (error) {
+                    NSLog(@"Error executing fetch request: %@",error);
+                    abort();
+                } else {
+                    // there are no messages, create them
+                    NSData *videoData = [NSData dataWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"test" withExtension:@"mp4"]];
+                    for (NSUInteger i = 0; i < messageCount; i++) {
+                        NSManagedObject *obj = [NSEntityDescription insertNewObjectForEntityForName:@"VideoMessage" inManagedObjectContext:ctx];
+                        [obj setValue:@(i) forKey:@"identifier"];
+                        [obj setValue:videoData forKey:@"videoData"];
+                        NSLog(@"created %lu of %lu",(unsigned long)i+1,(unsigned long)messageCount);
+                    }
+                    
+                    if (![ctx save:&error]) {
+                        NSLog(@"Error saving context: %@",error);
+                        abort();
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            NSError *mainContextSaveError = nil;
+                            if (![self.managedObjectContext save:&mainContextSaveError]) {
+                                NSLog(@"Error saving context: %@",mainContextSaveError);
+                                abort();
+                            }
+                        });
+                    }
+                }
+            }
+        }];
+    }
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
@@ -77,7 +143,7 @@
     
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
     if (coordinator != nil) {
-        _managedObjectContext = [[NSManagedObjectContext alloc] init];
+        _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
         [_managedObjectContext setPersistentStoreCoordinator:coordinator];
     }
     return _managedObjectContext;
@@ -95,6 +161,10 @@
     return _managedObjectModel;
 }
 
+- (NSURL *)storeURL {
+    return [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"CoreDataMigration.sqlite"];
+}
+
 // Returns the persistent store coordinator for the application.
 // If the coordinator doesn't already exist, it is created and the application's store added to it.
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator
@@ -103,11 +173,9 @@
         return _persistentStoreCoordinator;
     }
     
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"CoreDataMigration.sqlite"];
-    
     NSError *error = nil;
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
+    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:[self storeURL] options:@{NSInferMappingModelAutomaticallyOption : @YES, NSMigratePersistentStoresAutomaticallyOption : @YES} error:&error]) {
         /*
          Replace this implementation with code to handle the error appropriately.
          
