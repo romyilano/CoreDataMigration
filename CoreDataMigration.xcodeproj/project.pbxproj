@@ -22,6 +22,7 @@
 		DEF8CF0A198A2D5600B1559F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DEF8CEEE198A2D5500B1559F /* CoreData.framework */; };
 		DEF8CF12198A2D5600B1559F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DEF8CF10198A2D5600B1559F /* InfoPlist.strings */; };
 		DEF8CF14198A2D5600B1559F /* CoreDataMigrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DEF8CF13198A2D5600B1559F /* CoreDataMigrationTests.m */; };
+		DEF8CF1F198A30F300B1559F /* test.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = DEF8CF1E198A30F300B1559F /* test.mp4 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DECD94D1198A3911006CD901 /* CoreDataMigration2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataMigration2.xcdatamodel; sourceTree = "<group>"; };
 		DEF8CEE5198A2D5500B1559F /* CoreDataMigration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoreDataMigration.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEF8CEE8198A2D5500B1559F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		DEF8CEEA198A2D5500B1559F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -53,6 +55,7 @@
 		DEF8CF0F198A2D5600B1559F /* CoreDataMigrationTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CoreDataMigrationTests-Info.plist"; sourceTree = "<group>"; };
 		DEF8CF11198A2D5600B1559F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DEF8CF13198A2D5600B1559F /* CoreDataMigrationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CoreDataMigrationTests.m; sourceTree = "<group>"; };
+		DEF8CF1E198A30F300B1559F /* test.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.mp4; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +118,7 @@
 		DEF8CEF0198A2D5500B1559F /* CoreDataMigration */ = {
 			isa = PBXGroup;
 			children = (
+				DEF8CF1D198A2DA000B1559F /* Resources */,
 				DEF8CEF9198A2D5500B1559F /* PPSAppDelegate.h */,
 				DEF8CEFA198A2D5500B1559F /* PPSAppDelegate.m */,
 				DEF8CEFF198A2D5600B1559F /* Images.xcassets */,
@@ -151,6 +155,14 @@
 				DEF8CF10198A2D5600B1559F /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		DEF8CF1D198A2DA000B1559F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				DEF8CF1E198A30F300B1559F /* test.mp4 */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -230,6 +242,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DEF8CEF5198A2D5500B1559F /* InfoPlist.strings in Resources */,
+				DEF8CF1F198A30F300B1559F /* test.mp4 in Resources */,
 				DEF8CF00198A2D5600B1559F /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -450,6 +463,7 @@
 				DEF8CF19198A2D5600B1559F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DEF8CF1A198A2D5600B1559F /* Build configuration list for PBXNativeTarget "CoreDataMigrationTests" */ = {
 			isa = XCConfigurationList;
@@ -458,6 +472,7 @@
 				DEF8CF1C198A2D5600B1559F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
@@ -465,9 +480,10 @@
 		DEF8CEFC198A2D5600B1559F /* CoreDataMigration.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				DECD94D1198A3911006CD901 /* CoreDataMigration2.xcdatamodel */,
 				DEF8CEFD198A2D5600B1559F /* CoreDataMigration.xcdatamodel */,
 			);
-			currentVersion = DEF8CEFD198A2D5600B1559F /* CoreDataMigration.xcdatamodel */;
+			currentVersion = DECD94D1198A3911006CD901 /* CoreDataMigration2.xcdatamodel */;
 			path = CoreDataMigration.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
