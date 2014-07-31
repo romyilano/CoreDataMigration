@@ -16,6 +16,8 @@
 
 extern uint64_t dispatch_benchmark(size_t count, void (^block)(void));
 
+#define USE_EXTERNAL_STORAGE
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     NSLog(@"Documents directory: %@",[self applicationDocumentsDirectory]);
@@ -61,7 +63,9 @@ extern uint64_t dispatch_benchmark(size_t count, void (^block)(void));
                     for (NSUInteger i = 0; i < messageCount; i++) {
                         NSManagedObject *obj = [NSEntityDescription insertNewObjectForEntityForName:@"VideoMessage" inManagedObjectContext:ctx];
                         [obj setValue:@(i) forKey:@"identifier"];
+#ifdef USE_EXTERNAL_STORAGE
                         [obj setValue:videoData forKey:@"videoData"];
+#endif
                         NSLog(@"created %lu of %lu",(unsigned long)i+1,(unsigned long)messageCount);
                     }
                     
